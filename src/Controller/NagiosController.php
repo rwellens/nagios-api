@@ -8,10 +8,9 @@
 
 namespace App\Controller;
 
-use NagiosDat\DatIterator;
-use NagiosDat\DatParser;
+use App\Service\Nagios as NagiosService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -21,42 +20,30 @@ class NagiosController extends AbstractController
 {
 
     /**
+     * @param NagiosService $serviceNagios
+     * @param string        $server
+     *
      * @Route("/api/{server}", requirements={"server"="[0-9a-zA-Z_.-]*"}, methods="GET")
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      */
-    public function getDataAction(DatParser $parser, $server = null)
+    public function getDataAction(NagiosService $serviceNagios, $server = null)
     {
-
-        $datData = $parser->toArray();
+        $datData = $serviceNagios->getAll();
 
         if ($server) {
-            return $this->getOne($datData, $server);
+
+            $serverData = $serviceNagios->getOne($server);
+
+            if (!$serverData) {
+                return $this->json(sprintf('no server %s', $server), 404);
+            }
+
+            return $this->json($serverData);
         }
 
         return $this->json($datData);
     }
 
-
-    /**
-     * @param $datData
-     * @param $server
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    protected function getOne($datData, $server)
-    {
-        if (isset($datData['machines'][$server]) || $datData['services'][$server]) {
-
-            $return = [];
-
-            $return['machines'][$server] = $datData['machines'][$server];
-            $return['services'][$server] = $datData['services'][$server];
-
-            return $this->json($return);
-        };
-
-        return $this->json(sprintf('no server %s', $server), 404);
-    }
 
 }

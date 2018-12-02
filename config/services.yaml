@@ -32,7 +32,10 @@ services:
 
     NagiosDat\DatIterator:
         arguments:
-            $file: ../status.dat
+            $file: ../samples/status.dat
     NagiosDat\DatParser:
          public: true
+    App\Service\Nagios:
+         public: true
+
 
