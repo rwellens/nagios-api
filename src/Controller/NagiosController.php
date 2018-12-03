@@ -11,6 +11,7 @@ namespace App\Controller;
 use App\Service\Nagios as NagiosService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -27,7 +28,7 @@ class NagiosController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function getDataAction(NagiosService $serviceNagios, $server = null)
+    public function getDataAction(NagiosService $serviceNagios, string $server = null)
     {
         $datData = $serviceNagios->getAll();
 
@@ -43,6 +44,53 @@ class NagiosController extends AbstractController
         }
 
         return $this->json($datData);
+    }
+
+
+    /**
+     * @param NagiosService $serviceNagios
+     * @param string        $server
+     *
+     * @Route("/api/{server}", requirements={"server"="[0-9a-zA-Z_.-]*"}, methods="DELETE")
+     *
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function deleteServer(NagiosService $serviceNagios, string $server)
+    {
+        if ($serviceNagios->delete($server)) {
+
+            return $this->json(['action' => 'deleted', 'name' => $server], 204);
+        };
+
+        return $this->json(['Host does not exist!']);
+    }
+
+    /**
+     * @param Request       $request
+     * @param NagiosService $serviceNagios
+     *
+     * @return JsonResponse
+     * @Route("/api", methods="POST")
+     * @throws \Exception
+     */
+    public function addServer(Request $request, NagiosService $serviceNagios)
+    {
+        $host = $request->get('host');
+        $ip = $request->get('ip');
+
+        if (empty($host) || !$serviceNagios->validateIp($ip)) {
+            return $this->json(['Invalid data'], 400);
+        }
+
+        if ($serviceNagios->add($host, $ip)) {
+
+            return $this->json(['action' => 'created', 'name' => $host, 'ip' => $ip], 201);
+        };
+
+
+        return $this->json(['Host not added'], 500);
+
     }
 
 
