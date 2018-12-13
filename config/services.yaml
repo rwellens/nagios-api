@@ -35,8 +35,16 @@ services:
       $file: "%env(NAGIOS_STATUS_FILE)%"
   NagiosDat\DatParser:
     public: true
-  App\Service\Nagios:
+  NagiosCfg\Converter:
+    public: true
+  Symfony\Component\Finder\Finder:
+    public: true
+  App\Service\NagiosDat:
     public: true
     arguments:
       $hostFileDir: "%env(NAGIOS_HOST_FILE_DIR)%"
+  App\Service\NagiosCfg:
+    public: true
+    arguments:
+      $cfgDirectory: "%env(NAGIOS_CFG_DIR)%"
 

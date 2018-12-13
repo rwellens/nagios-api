@@ -1,30 +1,30 @@
 <?php
 /**
- * NagiosController.php
+ * NagiosDatController.php
  *
  * @date        21/11/2018
- * @file        NagiosController.php
+ * @file        NagiosDatController.php
  */
 
 namespace App\Controller;
 
-use App\Service\Nagios as NagiosService;
+use App\Service\NagiosDat as NagiosService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * NagiosController
+ * NagiosDatController
  */
-class NagiosController extends AbstractController
+class NagiosDatController extends AbstractController
 {
 
     /**
      * @param NagiosService $serviceNagios
      * @param string        $server
      *
-     * @Route("/api/{server}", requirements={"server"="[0-9a-zA-Z_.-]*"}, methods="GET")
+     * @Route("/api/dat/dat/{server}", requirements={"server"="[0-9a-zA-Z_.-]*"}, methods="GET")
      *
      * @return JsonResponse
      */
@@ -51,7 +51,7 @@ class NagiosController extends AbstractController
      * @param NagiosService $serviceNagios
      * @param string        $server
      *
-     * @Route("/api/{server}", requirements={"server"="[0-9a-zA-Z_.-]*"}, methods="DELETE")
+     * @Route("/api/dat/{server}", requirements={"server"="[0-9a-zA-Z_.-]*"}, methods="DELETE")
      *
      * @return JsonResponse
      * @throws \Exception
@@ -71,7 +71,7 @@ class NagiosController extends AbstractController
      * @param NagiosService $serviceNagios
      *
      * @return JsonResponse
-     * @Route("/api", methods="POST")
+     * @Route("/api/dat", methods="POST")
      * @throws \Exception
      */
     public function addServer(Request $request, NagiosService $serviceNagios)

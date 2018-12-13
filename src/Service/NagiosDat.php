@@ -1,9 +1,9 @@
 <?php
 /**
- * Nagios.php
+ * NagiosDat.php
  *
  * @date        27/11/2018
- * @file        Nagios.php
+ * @file        NagiosDat.php
  */
 
 namespace App\Service;
@@ -13,9 +13,9 @@ use Symfony\Component\Validator\Constraints\Ip;
 use Symfony\Component\Validator\Validation;
 
 /**
- * Nagios
+ * NagiosDat
  */
-class Nagios
+class NagiosDat
 {
     /**
      * @var DatParser
@@ -32,7 +32,7 @@ class Nagios
 
 
     /**
-     * Nagios constructor.
+     * NagiosDat constructor.
      *
      * @param DatParser $parser
      * @param string    $hostFileDir
