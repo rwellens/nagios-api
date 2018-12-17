@@ -1,3 +1,26 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+fetch_cfg:
+  path: /api/cfg/{type}/{name}
+  controller: App\Controller\NagiosCfgController::create
+  methods: [GET, HEAD]
+  requirements:
+    type: "host|service|contact|timeperiod|hostgroup|servicegroup|contactgroup"
+
+create_cfg:
+  path: /api/cfg/{type}
+  controller: App\Controller\NagiosCfgController::create
+  methods: [POST]
+  requirements:
+    type: "host|service|contact|timeperiod|hostgroup|servicegroup|contactgroup"
+
+delete_cfg:
+  path: /api/cfg/{type}/{name}
+  controller: App\Controller\NagiosCfgController::delete
+  methods: [DELETE]
+  requirements:
+    type: "host|service|contact|timeperiod|hostgroup|servicegroup|contactgroup"
+
+fetch_dat:
+  path: /api/dat/dat/{server}
+  methods: [GET]
+  requirements:
+    server: "[0-9a-zA-Z_.-]*"

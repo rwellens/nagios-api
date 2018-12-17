@@ -14,7 +14,8 @@
         "symfony/serializer-pack": "*",
         "symfony/validator": "4.1.*",
         "symfony/web-link": "4.1.*",
-        "symfony/yaml": "4.1.*"
+        "symfony/yaml": "4.1.*",
+        "ext-json": "*"
     },
     "require-dev": {
         "symfony/debug-pack": "*",

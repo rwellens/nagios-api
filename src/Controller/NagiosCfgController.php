@@ -9,12 +9,9 @@
 namespace App\Controller;
 
 use App\Service\NagiosCfg;
-use NagiosCfg\Converter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * NagiosDatController
@@ -23,14 +20,6 @@ class NagiosCfgController extends AbstractController
 {
 
     /**
-     * @Route("/api/cfg/{type}/{name}",
-     *     requirements=
-     *     {
-     *          "type"="host|service|contact|timeperiod|hostgroup|servicegroup|contactgroup"
-     *      },
-     *     name="get_one",
-     *     methods="GET")
-     *
      * @param NagiosCfg   $serviceNagios
      * @param string|null $type
      * @param string|null $name
@@ -42,7 +31,42 @@ class NagiosCfgController extends AbstractController
     {
         $cfgData = $serviceNagios->fetchAll($type, $name);
 
+        if(!$cfgData){
+            throw $this->createNotFoundException();
+        }
+
         return $this->json($cfgData);
+    }
+
+
+    /**
+     * @param Request   $request
+     * @param NagiosCfg $serviceNagios
+     * @param string    $type
+     *
+     * @return JsonResponse
+     */
+    public function create(Request $request, NagiosCfg $serviceNagios, string $type)
+    {
+        $cfgData = $serviceNagios->create($type, $request->getContent());
+
+        return $this->json($cfgData);
+    }
+
+    /**
+     * @param Request     $request
+     * @param NagiosCfg   $serviceNagios
+     * @param string|null $type
+     * @param string|null $name
+     *
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function delete(Request $request, NagiosCfg $serviceNagios, string $type, $name)
+    {
+        $serviceNagios->delete($type, $name);
+
+        return $this->json('deleted', 204);
     }
 
 

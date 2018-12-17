@@ -8,6 +8,7 @@
 
 namespace App\Service;
 
+use NagiosCfg\CfgIterator;
 use NagiosCfg\Converter;
 use Symfony\Component\Finder\Finder;
 
@@ -72,6 +73,71 @@ class NagiosCfg
             }
         }
 
+        if (isset($blockName)) {
+            return null;
+        }
+
         return $filesData;
     }
+
+    public function create(string $type, string $data)
+    {
+        $arrayData = $this->validAndDecodeJson($data);
+
+        $name = $arrayData[CfgIterator::$typesName[$type]];
+
+        $arrayCleaned[$type][$name] = $arrayData;
+
+        $cfgString = $this->converter->arrayToCfgString($arrayCleaned);
+
+        $filePath = $this->getFilePath($type, $name);
+
+
+        file_put_contents($filePath, $cfgString);
+
+        return $this->converter->cfgFileToArray($filePath);
+
+    }
+
+    private function validAndDecodeJson(string $arrayData)
+    {
+        return json_decode($arrayData, true);
+    }
+
+    /**
+     * @param string $type
+     * @param string $name
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function delete(string $type, string $name)
+    {
+        $cfgData = $this->fetchAll($type, $name);
+
+        if (!empty($cfgData) && unlink($cfgData['filePath'])) {
+            return true;
+        }
+
+        throw new \Exception('Unknown cfg config');
+    }
+
+    /**
+     * @param string $type
+     * @param        $name
+     *
+     * @return string
+     */
+    protected function getFilePath(string $type, $name): string
+    {
+        $fileName = $type . '_' . $name . '.cfg';
+        $directory = $this->cfgDirectory . '/' . $type . 's/';
+        $filePath = $directory . $fileName;
+
+        if (!realpath($directory)) {
+            mkdir($directory, 0700, true);
+        }
+
+        return $filePath;
+}
 }
