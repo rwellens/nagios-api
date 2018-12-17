@@ -1,9 +1,12 @@
 fetch_cfg:
   path: /api/cfg/{type}/{name}
-  controller: App\Controller\NagiosCfgController::create
+  controller: App\Controller\NagiosCfgController::fetch
   methods: [GET, HEAD]
   requirements:
     type: "host|service|contact|timeperiod|hostgroup|servicegroup|contactgroup"
+  defaults:
+    type: null
+    name: null
 
 create_cfg:
   path: /api/cfg/{type}

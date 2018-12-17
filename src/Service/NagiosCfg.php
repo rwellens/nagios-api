@@ -73,7 +73,7 @@ class NagiosCfg
             }
         }
 
-        if (isset($blockName)) {
+        if (isset($name)) {
             return null;
         }
 
